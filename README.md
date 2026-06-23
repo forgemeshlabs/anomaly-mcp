@@ -2,7 +2,7 @@
 
 Blockchain event sequence anomaly detection for MCP clients and x402-powered agents.
 
-This MCP server gives AI agents access to the ForgeMesh Anomaly Tracker API, which converts blockchain event streams into symbol sequences and scores them for anomalies using NASA ARC-16053-1 SequenceMiner. Returns a human-readable story label and anomaly score (0-100), not just a number.
+This MCP server gives AI agents access to the ForgeMesh Anomaly Tracker API, which detects unusual financial event sequences before they look obvious on a chart. Powered by NASA-derived sequence mining methods. Returns a human-readable story label and anomaly score (0-100), not just a number.
 
 This package is a thin client around the hosted API:
 

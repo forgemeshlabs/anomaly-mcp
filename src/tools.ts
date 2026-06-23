@@ -38,7 +38,7 @@ export const tools = [
   },
   {
     name: "detect_sequence_anomaly",
-    description: "Score a blockchain event window for sequence anomalies using NASA ARC-16053-1 SequenceMiner. Returns a story label, anomaly score (0-100), novelty level, and the peak anomalous symbol window. Costs $0.05 USDC on Base mainnet.",
+    description: "Score a blockchain event window for sequence anomalies. Returns a story label, anomaly score (0-100), novelty level, and the peak anomalous symbol window. Costs $0.05 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {

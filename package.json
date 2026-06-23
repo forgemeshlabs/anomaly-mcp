@@ -1,8 +1,8 @@
 {
   "name": "@forgemeshlabs/anomaly-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "mcpName": "io.github.forgemeshlabs/anomaly-mcp",
-  "description": "Blockchain event sequence anomaly detection MCP server. Scores event streams using NASA ARC-16053-1 SequenceMiner via x402 micropayments.",
+  "description": "Blockchain event sequence anomaly detection MCP server. Detects unusual financial event patterns via x402 micropayments.",
   "type": "module",
   "bin": {
     "anomaly-mcp": "dist/index.js"

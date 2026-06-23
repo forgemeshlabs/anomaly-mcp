@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.forgemeshlabs/anomaly-mcp",
-  "description": "Blockchain event sequence anomaly detection using NASA ARC-16053-1 SequenceMiner. Scores event streams and returns story labels via x402 micropayments.",
+  "description": "Blockchain event sequence anomaly detection. Detects unusual financial event patterns and returns story labels via x402 micropayments.",
   "repository": {
     "url": "https://github.com/forgemeshlabs/anomaly-mcp",
     "source": "github"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@forgemeshlabs/anomaly-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": {
         "type": "stdio"
       },
