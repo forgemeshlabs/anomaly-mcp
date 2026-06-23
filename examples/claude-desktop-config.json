@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "anomaly-tracker": {
+      "command": "npx",
+      "args": ["-y", "@forgemeshlabs/anomaly-mcp"],
+      "env": {
+        "ANOMALY_API_BASE": "https://anomaly.forgemesh.io"
+      }
+    }
+  }
+}

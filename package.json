@@ -1,0 +1,65 @@
+{
+  "name": "@forgemeshlabs/anomaly-mcp",
+  "version": "0.1.0",
+  "mcpName": "io.github.forgemeshlabs/anomaly-mcp",
+  "description": "Blockchain event sequence anomaly detection MCP server. Scores event streams using NASA ARC-16053-1 SequenceMiner via x402 micropayments.",
+  "type": "module",
+  "bin": {
+    "anomaly-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md",
+    "glama.json",
+    "server.json",
+    "smithery.yaml",
+    "docs",
+    "examples"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "x402",
+    "agent-payments",
+    "anomaly-detection",
+    "sequence-mining",
+    "blockchain",
+    "ethereum",
+    "base",
+    "arbitrum",
+    "forgemesh",
+    "usdc",
+    "nasa",
+    "sequenceminer"
+  ],
+  "author": "forgemeshlabs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forgemeshlabs/anomaly-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/forgemeshlabs/anomaly-mcp/issues"
+  },
+  "homepage": "https://github.com/forgemeshlabs/anomaly-mcp#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  }
+}

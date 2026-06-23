@@ -1,0 +1,18 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      apiBase:
+        type: string
+        description: Optional hosted API base URL override. Defaults to https://anomaly.forgemesh.io.
+  commandFunction: |-
+    (config) => ({
+      command: 'npx',
+      args: ['-y', '@forgemeshlabs/anomaly-mcp'],
+      env: {
+        ANOMALY_API_BASE: config.apiBase || 'https://anomaly.forgemesh.io'
+      }
+    })
+  exampleConfig:
+    apiBase: 'https://anomaly.forgemesh.io'
