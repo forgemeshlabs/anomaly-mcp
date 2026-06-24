@@ -228,6 +228,35 @@ export const tools = [
         }
       }
     }
+  },
+  // ── Real-time polling endpoints ──────────────────────────────────────────
+  {
+    name: "mempool_anomaly",
+    description: "Real-time mempool anomaly score — detects gas spikes, MEV signals, pending whale swaps, contract deploy bursts, and priority fee wars. Designed for 5-second polling. Returns a story label (e.g. 'MEV Attack', 'Gas Surge', 'Priority Fee War') and anomaly score. Costs $0.01 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        chain: {
+          type: "string",
+          enum: ["ethereum", "base"],
+          description: "Blockchain (default: ethereum). Only Ethereum and Base have RPC mempool access."
+        }
+      }
+    }
+  },
+  {
+    name: "depeg_monitor",
+    description: "Real-time stablecoin depeg detector — monitors USDC, USDT, DAI prices for micro-deviations from $1.00 peg, spread between stables, and volume spikes. Catches depegs before they become crises. Designed for 1-minute polling. Returns a story label (e.g. 'Single Coin Drift', 'Multi-Stablecoin Crisis', 'Depeg Event') and anomaly score. Costs $0.01 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        chain: {
+          type: "string",
+          enum: ["ethereum", "base", "arbitrum"],
+          description: "Blockchain (default: ethereum)"
+        }
+      }
+    }
   }
 ];
 
@@ -344,6 +373,16 @@ export async function callTool(name: string, args: Record<string, unknown>): Pro
     case "claude_feature_watch": {
       const cfDays = args.days || 7;
       return apiGet(`/api/claude-feature-watch?days=${cfDays}`);
+    }
+
+    case "mempool_anomaly": {
+      const mpChain = (args.chain as string) || "ethereum";
+      return apiGet(`/api/mempool-anomaly?chain=${mpChain}`);
+    }
+
+    case "depeg_monitor": {
+      const dpChain = (args.chain as string) || "ethereum";
+      return apiGet(`/api/depeg-monitor?chain=${dpChain}`);
     }
 
     default:

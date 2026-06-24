@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.forgemeshlabs/anomaly-mcp",
-  "description": "Multi-domain sequence anomaly detection — blockchain, aviation, and GitHub. NASA-derived sequence mining returns story labels via x402 micropayments.",
+  "description": "Multi-domain real-time anomaly detection — mempool, stablecoin depeg, blockchain, aviation, and GitHub. NASA-derived sequence mining via x402 micropayments.",
   "repository": {
     "url": "https://github.com/forgemeshlabs/anomaly-mcp",
     "source": "github"
   },
-  "version": "0.4.0",
+  "version": "0.5.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@forgemeshlabs/anomaly-mcp",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "transport": {
         "type": "stdio"
       },
