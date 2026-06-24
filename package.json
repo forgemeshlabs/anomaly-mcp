@@ -1,6 +1,6 @@
 {
   "name": "@forgemeshlabs/anomaly-mcp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "mcpName": "io.github.forgemeshlabs/anomaly-mcp",
   "description": "Blockchain event sequence anomaly detection MCP server. Detects unusual financial event patterns via x402 micropayments.",
   "type": "module",
