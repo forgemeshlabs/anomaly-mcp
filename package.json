@@ -1,8 +1,8 @@
 {
   "name": "@forgemeshlabs/anomaly-mcp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "mcpName": "io.github.forgemeshlabs/anomaly-mcp",
-  "description": "Blockchain event sequence anomaly detection MCP server. Detects unusual financial event patterns via x402 micropayments.",
+  "description": "Multi-domain sequence anomaly detection MCP server. Blockchain, aviation, and GitHub anomalies via x402 micropayments.",
   "type": "module",
   "bin": {
     "anomaly-mcp": "dist/index.js"
@@ -31,6 +31,9 @@
     "anomaly-detection",
     "sequence-mining",
     "blockchain",
+    "aviation",
+    "github",
+    "claude",
     "ethereum",
     "base",
     "arbitrum",

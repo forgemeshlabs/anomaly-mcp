@@ -1,8 +1,8 @@
 # Anomaly Tracker MCP
 
-Blockchain event sequence anomaly detection for AI agents. Detects unusual financial event patterns across Ethereum, Base, and Arbitrum using NASA-derived sequence mining. Returns a story label and anomaly score, not just a number.
+Multi-domain sequence anomaly detection for AI agents. Detects unusual event patterns across blockchain markets, live airspace, and GitHub repositories using NASA-derived sequence mining. Returns a story label and anomaly score, not just a number.
 
-This MCP server gives AI agents access to the ForgeMesh Anomaly Tracker API via 5 tools — chain-wide anomaly scanning, single-token analysis, whale alerts, model health, and API status.
+This MCP server gives AI agents access to the ForgeMesh Anomaly Tracker API via 14 tools spanning blockchain, aviation, and GitHub domains.
 
 Thin client architecture:
 
@@ -43,44 +43,79 @@ npx -y @forgemeshlabs/anomaly-mcp
 | Tool | Description | Cost |
 | --- | --- | --- |
 | `health_check` | API health and uptime | Free |
-| `anomaly_scan` | Chain-wide sequence anomaly scan — scores event windows for unusual patterns | $0.05 USDC |
-| `token_scan` | Single-token anomaly scan — scores transfer patterns for one token | $0.03 USDC |
-| `whale_alerts` | Recent whale movements, CEX flows, bridge activity, stablecoin mints/burns | $0.02 USDC |
-| `model_status` | SequenceMiner model health and training stats per chain | $0.01 USDC |
+| `anomaly_scan` | Chain-wide sequence anomaly scan | $0.05 USDC |
+| `token_scan` | Single-token transfer pattern anomalies | $0.03 USDC |
+| `whale_alerts` | Whale movements, CEX flows, bridge activity | $0.02 USDC |
+| `address_scan` | Wallet transaction pattern anomalies | $0.03 USDC |
+| `model_status` | SequenceMiner model health per chain | $0.01 USDC |
+| `nft_scan` | NFT collection anomalies (sweeps, wash trading) | $0.03 USDC |
+| `defi_scan` | DeFi protocol flow anomalies | $0.03 USDC |
+| `squawk_alerts` | Live aviation emergency squawk codes | $0.02 USDC |
+| `flight_scan` | Airspace region anomaly analysis | $0.03 USDC |
+| `trending_signal` | GitHub repos with anomalous star velocity | $0.02 USDC |
+| `repo_scan` | Deep repo velocity/fork anomaly scan | $0.03 USDC |
+| `github_watch` | Repo activity stream anomalies | $0.03 USDC |
+| `claude_feature_watch` | Anthropic/Claude merged feature alerts | $0.02 USDC |
 
-### anomaly_scan
+### Blockchain Tools
 
-Scan a blockchain for sequence anomalies across all monitored addresses.
-
+**anomaly_scan** — Scan a blockchain for sequence anomalies across all monitored addresses.
 - **chain**: `ethereum`, `base`, or `arbitrum` (default: ethereum)
 - **window**: `1h`, `4h`, `24h`, or `168h` (default: 24h)
+- Returns: `sequence_score` (0-100), `story` (human label), `novelty`, `peak_window`, `possible_failure_modes`
 
-Returns: `sequence_score` (0-100), `story` (human label), `novelty`, `peak_window`, `possible_failure_modes`
-
-### token_scan
-
-Anomaly scan for a single token's recent transfer patterns.
-
+**token_scan** — Anomaly scan for a single token's recent transfer patterns.
 - **token** (required): Contract address (`0x...`) or symbol — `usdt`, `usdc`, `weth`, `wbtc`, `link`, `uni`, `aave`, `steth`, `pepe`, `dai`, `cbeth`, `arb`
 - **chain**: `ethereum`, `base`, or `arbitrum` (default: ethereum)
 - **window**: `1h`, `4h`, `24h`, or `168h` (default: 24h)
 
-Returns: `sequence_score`, `story`, `novelty`, `peak_window`, `transfers` (recent transfer events with source/direction)
-
-### whale_alerts
-
-Recent whale movements from 12+ monitored addresses: Binance, Coinbase, Kraken, OKX, Bybit, Arbitrum/Optimism/Polygon bridges, Tether Treasury, Circle.
-
+**whale_alerts** — Recent whale movements from 12+ monitored addresses: Binance, Coinbase, Kraken, OKX, Bybit, major bridges, Tether, Circle.
 - **chain**: `ethereum`, `base`, or `arbitrum` (default: ethereum)
 - **hours**: 1-168 (default: 4)
 
-Returns: `alerts` array with `symbol`, `source`, `amount_eth`/`amount_usd`, `timestamp`
+**address_scan** — Scan any wallet address for anomalous transaction patterns.
+- **address** (required): Wallet address (`0x...`)
+- **chain**: `ethereum`, `base`, or `arbitrum`
+- **window**: `1h`, `4h`, `24h`, or `168h`
 
-## Symbol Alphabet
+**nft_scan** — Anomaly scan for an NFT collection — sweep accumulation, wash trading, mint surges.
+- **token** (required): ERC-721/ERC-1155 contract address
 
-The financial domain tracks 16 event types:
+**defi_scan** — Anomaly scan for DeFi protocols — unusual flows through Uniswap, Aave, Curve, Compound.
+- **protocol** (required): Protocol name or `0x` address
 
-`WHALE_BUY`, `WHALE_SELL`, `CEX_INFLOW`, `CEX_OUTFLOW`, `BRIDGE_IN`, `BRIDGE_OUT`, `DEX_SWAP`, `DEX_LIQUIDITY_ADD`, `DEX_LIQUIDITY_REMOVE`, `STABLECOIN_MINT`, `STABLECOIN_REDEEM`, `STABLECOIN_BURN`, `TOKEN_MINT`, `TOKEN_BURN`, `FUNDING_SPIKE`, `LIQUIDATION`
+### Aviation Tools
+
+**squawk_alerts** — Live global sweep of aircraft squawking 7700 (emergency), 7600 (radio failure), or 7500 (hijack).
+
+**flight_scan** — Sequence anomaly analysis for a named airspace region.
+- **region**: `north_atlantic`, `europe`, `north_america`, `asia_pacific`, `middle_east`, `africa`, or `global`
+
+### GitHub Tools
+
+**trending_signal** — GitHub repos with anomalous star velocity — early signals before mainstream discovery.
+- **days**: `3`, `7`, `14`, or `30` (default: 7)
+
+**repo_scan** — Deep anomaly scan for a single repository — star velocity, fork ratio, overnight explosion signals.
+- **repo** (required): `owner/repo` format
+
+**github_watch** — Watch a repo's activity stream for anomalous development patterns — commit bursts, force pushes, issue floods, merge rushes, bot takeovers.
+- **repo** (required): `owner/repo` format
+
+**claude_feature_watch** — Watch Anthropic/Claude repos for recently merged features. Scans anthropic-sdk-python, anthropic-sdk-typescript, claude-code, courses, and anthropic-cookbook.
+- **days**: 1-30 (default: 7)
+
+## Symbol Alphabets
+
+**Financial**: `WHALE_BUY`, `WHALE_SELL`, `CEX_INFLOW`, `CEX_OUTFLOW`, `BRIDGE_IN`, `BRIDGE_OUT`, `DEX_SWAP`, `DEX_LIQUIDITY_ADD`, `DEX_LIQUIDITY_REMOVE`, `STABLECOIN_MINT`, `STABLECOIN_REDEEM`, `STABLECOIN_BURN`, `TOKEN_MINT`, `TOKEN_BURN`, `FUNDING_SPIKE`, `LIQUIDATION`
+
+**NFT**: `NFT_MINT`, `NFT_BURN`, `NFT_SALE`, `NFT_SWEEP`, `NFT_WASH_TRADE`
+
+**Aviation**: `ENROUTE`, `SQUAWK_7700`, `SQUAWK_7600`, `SQUAWK_7500`, `RAPID_DESCENT`, `RAPID_CLIMB`, `HIGH_SPEED`, `NEAR_STALL`
+
+**Creator**: `VIRAL_REPO`, `HOT_REPO`, `EMERGING_REPO`, `STEADY_REPO`, `QUIET_REPO`, `FORK_SURGE`, `BOOKMARK_ONLY`, `ISSUE_FLOOD`, `OVERNIGHT_STAR`, `RAPID_GROWTH`
+
+**GitHub Watch**: `COMMIT_PUSH`, `COMMIT_BURST`, `FORCE_PUSH`, `ISSUE_OPEN`, `ISSUE_CLOSE`, `ISSUE_COMMENT`, `ISSUE_FLOOD`, `PR_OPEN`, `PR_MERGE`, `PR_CLOSE`, `PR_REVIEW`, `MERGE_RUSH`, `BRANCH_CREATE`, `BRANCH_DELETE`, `TAG_CREATE`, `RELEASE_PUBLISH`, `FORK_EVENT`, `STAR_EVENT`, `BOT_DOMINATED`, `SOLO_OPERATOR`
 
 ## Payment
 

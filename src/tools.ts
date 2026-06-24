@@ -200,6 +200,34 @@ export const tools = [
       },
       required: ["repo"]
     }
+  },
+  // ── GitHub activity watch ─────────────────────────────────────────────────
+  {
+    name: "github_watch",
+    description: "Watch a GitHub repo's activity stream for anomalous development patterns — commit bursts, force pushes, issue floods, merge rushes, bot takeovers. Returns a story label (e.g. 'History Rewrite', 'Merge Sprint', 'Bot Takeover') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        repo: {
+          type: "string",
+          description: "GitHub repo in owner/repo format, e.g. vercel/ai"
+        }
+      },
+      required: ["repo"]
+    }
+  },
+  {
+    name: "claude_feature_watch",
+    description: "Watch Anthropic/Claude repos for recently merged features — SDK changes, Claude Code updates, new capabilities. Scans anthropic-sdk-python, anthropic-sdk-typescript, claude-code, courses, and anthropic-cookbook. Costs $0.02 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        days: {
+          type: "integer",
+          description: "Lookback window in days, 1-30 (default: 7)"
+        }
+      }
+    }
   }
 ];
 
@@ -307,6 +335,16 @@ export async function callTool(name: string, args: Record<string, unknown>): Pro
       return apiPost("/api/repo-scan", {
         repo: args.repo as string
       });
+
+    case "github_watch":
+      return apiPost("/api/github-watch", {
+        repo: args.repo as string
+      });
+
+    case "claude_feature_watch": {
+      const cfDays = args.days || 7;
+      return apiGet(`/api/claude-feature-watch?days=${cfDays}`);
+    }
 
     default:
       return { error: `Unknown tool: ${name}` };
