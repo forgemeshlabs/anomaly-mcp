@@ -1,3 +1,4 @@
+declare const process: { env: Record<string, string | undefined> };
 const API_BASE = process.env.ANOMALY_API_BASE || "https://anomaly.forgemesh.io";
 
 export const tools = [
