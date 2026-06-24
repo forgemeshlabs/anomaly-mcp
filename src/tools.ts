@@ -69,6 +69,30 @@ export const tools = [
     }
   },
   {
+    name: "address_scan",
+    description: "Scan any wallet address for anomalous transaction patterns. Classifies each transaction by checking counterparties against known CEX wallets, bridges, and stablecoin issuers. Costs $0.03 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        address: {
+          type: "string",
+          description: "Wallet address to scan (0x...)"
+        },
+        chain: {
+          type: "string",
+          enum: ["ethereum", "base", "arbitrum"],
+          description: "Blockchain to scan (default: ethereum)"
+        },
+        window: {
+          type: "string",
+          enum: ["1h", "4h", "24h", "168h"],
+          description: "Lookback window (default: 24h)"
+        }
+      },
+      required: ["address"]
+    }
+  },
+  {
     name: "model_status",
     description: "Get SequenceMiner model health and training stats per chain — training sequence count and last retrain time. Costs $0.01 USDC on Base mainnet.",
     inputSchema: {
@@ -140,6 +164,13 @@ export async function callTool(name: string, args: Record<string, unknown>): Pro
       const hours = args.hours || 4;
       return apiGet(`/api/whale-alerts?chain=${chain}&hours=${hours}`);
     }
+
+    case "address_scan":
+      return apiPost("/api/address-scan", {
+        address: args.address as string,
+        chain: (args.chain as string) || "ethereum",
+        window: (args.window as string) || "24h"
+      });
 
     case "model_status":
       return apiGet("/api/sequence-anomaly/status");
