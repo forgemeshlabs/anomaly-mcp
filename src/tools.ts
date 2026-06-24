@@ -76,7 +76,7 @@ async function apiGet(path: string): Promise<unknown> {
     const challenge = res.headers.get("payment-required");
     let decoded: unknown = null;
     if (challenge) {
-      try { decoded = JSON.parse(Buffer.from(challenge, "base64").toString()); } catch {}
+      try { decoded = JSON.parse(atob(challenge)); } catch {}
     }
     return {
       x402_status: 402,
@@ -97,7 +97,7 @@ async function apiPost(path: string, body: Record<string, unknown>): Promise<unk
     const challenge = res.headers.get("payment-required");
     let decoded: unknown = null;
     if (challenge) {
-      try { decoded = JSON.parse(Buffer.from(challenge, "base64").toString()); } catch {}
+      try { decoded = JSON.parse(atob(challenge)); } catch {}
     }
     return {
       x402_status: 402,
