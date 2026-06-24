@@ -99,6 +99,107 @@ export const tools = [
       type: "object" as const,
       properties: {}
     }
+  },
+  // ── NFT & DeFi ────────────────────────────────────────────────────────────
+  {
+    name: "nft_scan",
+    description: "Anomaly scan for an NFT collection — detects sweep accumulation, wash trading patterns, and mint surges before they're obvious. Pass a contract address. Returns a story label (e.g. 'Sweep Accumulation', 'Wash Trading Detected') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        token: {
+          type: "string",
+          description: "NFT contract address (ERC-721 or ERC-1155), e.g. 0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"
+        },
+        chain: {
+          type: "string",
+          enum: ["ethereum", "base", "arbitrum"],
+          description: "Blockchain (default: ethereum)"
+        },
+        window: {
+          type: "string",
+          enum: ["1h", "4h", "24h", "168h"],
+          description: "Lookback window (default: 24h)"
+        }
+      },
+      required: ["token"]
+    }
+  },
+  {
+    name: "defi_scan",
+    description: "Anomaly scan for a DeFi protocol — detects unusual flows through major lending and DEX contracts (Uniswap, Aave, Curve, Compound). Pass a protocol name or contract address. Returns a story label and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        protocol: {
+          type: "string",
+          description: "Protocol name (uniswap_v3, uniswap_v3_r2, aave_v3, aave_v2, curve_3pool, compound_v3) or a 0x contract address"
+        },
+        chain: {
+          type: "string",
+          enum: ["ethereum", "base", "arbitrum"],
+          description: "Blockchain (default: ethereum)"
+        },
+        window: {
+          type: "string",
+          enum: ["1h", "4h", "24h", "168h"],
+          description: "Lookback window (default: 24h)"
+        }
+      },
+      required: ["protocol"]
+    }
+  },
+  // ── Aviation ──────────────────────────────────────────────────────────────
+  {
+    name: "squawk_alerts",
+    description: "Live global sweep of active aviation emergency squawk codes via OpenSky Network. Returns all aircraft currently squawking 7700 (general emergency), 7600 (radio failure), or 7500 (hijack) with position, altitude, and velocity. Costs $0.02 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {}
+    }
+  },
+  {
+    name: "flight_scan",
+    description: "Sequence anomaly analysis for a named airspace region — detects unusual clustering of emergency squawks, rapid descents, or speed anomalies using the SequenceMiner engine. Costs $0.03 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        region: {
+          type: "string",
+          enum: ["north_atlantic", "europe", "north_america", "asia_pacific", "middle_east", "africa", "global"],
+          description: "Airspace region to analyze (default: global)"
+        }
+      }
+    }
+  },
+  // ── Creator signals ───────────────────────────────────────────────────────
+  {
+    name: "trending_signal",
+    description: "GitHub repos with anomalous star velocity right now — early signals before mainstream discovery. Detects repos going viral (200+ stars/day), overnight explosions, fork surges, and issue floods. Useful for trend hunting, VC scouting, developer tool discovery. Costs $0.02 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        days: {
+          type: "string",
+          enum: ["3", "7", "14", "30"],
+          description: "Search repos created in the last N days (default: 7)"
+        }
+      }
+    }
+  },
+  {
+    name: "repo_scan",
+    description: "Deep anomaly scan for a single GitHub repository — scores star velocity, fork ratio, overnight explosion signals, and issue flood patterns. Returns a story label (e.g. 'Breakout Signal', 'Viral Activity') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        repo: {
+          type: "string",
+          description: "GitHub repo in owner/repo format, e.g. vercel/ai or microsoft/vscode"
+        }
+      },
+      required: ["repo"]
+    }
   }
 ];
 
@@ -174,6 +275,38 @@ export async function callTool(name: string, args: Record<string, unknown>): Pro
 
     case "model_status":
       return apiGet("/api/sequence-anomaly/status");
+
+    case "nft_scan":
+      return apiPost("/api/nft-scan", {
+        token: args.token as string,
+        chain: (args.chain as string) || "ethereum",
+        window: (args.window as string) || "24h"
+      });
+
+    case "defi_scan":
+      return apiPost("/api/defi-scan", {
+        protocol: args.protocol as string,
+        chain: (args.chain as string) || "ethereum",
+        window: (args.window as string) || "24h"
+      });
+
+    case "squawk_alerts":
+      return apiGet("/api/squawk-alerts");
+
+    case "flight_scan":
+      return apiPost("/api/flight-scan", {
+        region: (args.region as string) || "global"
+      });
+
+    case "trending_signal": {
+      const days = args.days || "7";
+      return apiGet(`/api/trending-signal?days=${days}`);
+    }
+
+    case "repo_scan":
+      return apiPost("/api/repo-scan", {
+        repo: args.repo as string
+      });
 
     default:
       return { error: `Unknown tool: ${name}` };
