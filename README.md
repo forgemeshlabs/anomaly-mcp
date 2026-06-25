@@ -2,7 +2,7 @@
 
 Multi-domain sequence anomaly detection for AI agents. Detects unusual event patterns across blockchain markets, live airspace, and GitHub repositories using NASA-derived sequence mining. Returns a story label and anomaly score, not just a number.
 
-This MCP server gives AI agents access to the ForgeMesh Anomaly Tracker API via 14 tools spanning blockchain, aviation, and GitHub domains.
+This MCP server gives AI agents access to the ForgeMesh Anomaly Tracker API via 16 tools spanning blockchain, aviation, GitHub, and real-time market monitoring domains.
 
 Thin client architecture:
 
@@ -44,18 +44,20 @@ npx -y @forgemeshlabs/anomaly-mcp
 | --- | --- | --- |
 | `health_check` | API health and uptime | Free |
 | `anomaly_scan` | Chain-wide sequence anomaly scan | $0.05 USDC |
-| `token_scan` | Single-token transfer pattern anomalies | $0.03 USDC |
+| `token_scan` | Best-effort single-token transfer anomalies with source status | $0.03 USDC |
 | `whale_alerts` | Whale movements, CEX flows, bridge activity | $0.02 USDC |
 | `address_scan` | Wallet transaction pattern anomalies | $0.03 USDC |
 | `model_status` | SequenceMiner model health per chain | $0.01 USDC |
-| `nft_scan` | NFT collection anomalies (sweeps, wash trading) | $0.03 USDC |
+| `nft_scan` | Best-effort NFT collection anomalies with source status | $0.03 USDC |
 | `defi_scan` | DeFi protocol flow anomalies | $0.03 USDC |
-| `squawk_alerts` | Live aviation emergency squawk codes | $0.02 USDC |
+| `squawk_alerts` | Best-effort live aviation emergency squawk codes with source status | $0.02 USDC |
 | `flight_scan` | Airspace region anomaly analysis | $0.03 USDC |
 | `trending_signal` | GitHub repos with anomalous star velocity | $0.02 USDC |
 | `repo_scan` | Deep repo velocity/fork anomaly scan | $0.03 USDC |
 | `github_watch` | Repo activity stream anomalies | $0.03 USDC |
 | `claude_feature_watch` | Anthropic/Claude merged feature alerts | $0.02 USDC |
+| `mempool_anomaly` | Real-time mempool anomaly score for 5-second polling | $0.01 USDC |
+| `depeg_monitor` | Real-time stablecoin depeg detector for 1-minute polling | $0.01 USDC |
 
 ### Blockchain Tools
 
@@ -64,7 +66,7 @@ npx -y @forgemeshlabs/anomaly-mcp
 - **window**: `1h`, `4h`, `24h`, or `168h` (default: 24h)
 - Returns: `sequence_score` (0-100), `story` (human label), `novelty`, `peak_window`, `possible_failure_modes`
 
-**token_scan** — Anomaly scan for a single token's recent transfer patterns.
+**token_scan** — Best-effort anomaly scan for a single token's recent transfer patterns. Paid output includes source status and coverage notes so agents can distinguish "quiet token" from source coverage issues.
 - **token** (required): Contract address (`0x...`) or symbol — `usdt`, `usdc`, `weth`, `wbtc`, `link`, `uni`, `aave`, `steth`, `pepe`, `dai`, `cbeth`, `arb`
 - **chain**: `ethereum`, `base`, or `arbitrum` (default: ethereum)
 - **window**: `1h`, `4h`, `24h`, or `168h` (default: 24h)
@@ -78,7 +80,7 @@ npx -y @forgemeshlabs/anomaly-mcp
 - **chain**: `ethereum`, `base`, or `arbitrum`
 - **window**: `1h`, `4h`, `24h`, or `168h`
 
-**nft_scan** — Anomaly scan for an NFT collection — sweep accumulation, wash trading, mint surges.
+**nft_scan** — Best-effort anomaly scan for an NFT collection — sweep accumulation, wash trading, mint surges. Paid output includes source status and coverage notes.
 - **token** (required): ERC-721/ERC-1155 contract address
 
 **defi_scan** — Anomaly scan for DeFi protocols — unusual flows through Uniswap, Aave, Curve, Compound.
@@ -86,7 +88,7 @@ npx -y @forgemeshlabs/anomaly-mcp
 
 ### Aviation Tools
 
-**squawk_alerts** — Live global sweep of aircraft squawking 7700 (emergency), 7600 (radio failure), or 7500 (hijack).
+**squawk_alerts** — Best-effort live global sweep of aircraft squawking 7700 (emergency), 7600 (radio failure), or 7500 (hijack). Paid output includes source status, monitored scope, and coverage notes.
 
 **flight_scan** — Sequence anomaly analysis for a named airspace region.
 - **region**: `north_atlantic`, `europe`, `north_america`, `asia_pacific`, `middle_east`, `africa`, or `global`
@@ -104,6 +106,14 @@ npx -y @forgemeshlabs/anomaly-mcp
 
 **claude_feature_watch** — Watch Anthropic/Claude repos for recently merged features. Scans anthropic-sdk-python, anthropic-sdk-typescript, claude-code, courses, and anthropic-cookbook.
 - **days**: 1-30 (default: 7)
+
+### Real-Time Tools
+
+**mempool_anomaly** — Real-time mempool anomaly score for gas spikes, MEV signals, pending whale swaps, contract deploy bursts, and priority fee wars.
+- **chain**: `ethereum` or `base` (default: ethereum)
+
+**depeg_monitor** — Real-time stablecoin depeg detector for USDC, USDT, and DAI micro-deviations, stablecoin spreads, and volume spikes.
+- **chain**: `ethereum`, `base`, or `arbitrum` (default: ethereum)
 
 ## Symbol Alphabets
 

@@ -28,7 +28,7 @@ export const tools = [
   },
   {
     name: "token_scan",
-    description: "Anomaly scan for a single token — scores recent transfer patterns for unusual activity (large CEX flows, whale accumulation, token mints/burns). Pass a contract address or well-known symbol. Costs $0.03 USDC on Base mainnet.",
+    description: "Best-effort anomaly scan for a single token — scores recent transfer patterns for unusual activity and returns source status plus coverage notes. Pass a contract address or well-known symbol. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -103,7 +103,7 @@ export const tools = [
   // ── NFT & DeFi ────────────────────────────────────────────────────────────
   {
     name: "nft_scan",
-    description: "Anomaly scan for an NFT collection — detects sweep accumulation, wash trading patterns, and mint surges before they're obvious. Pass a contract address. Returns a story label (e.g. 'Sweep Accumulation', 'Wash Trading Detected') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    description: "Best-effort anomaly scan for an NFT collection — detects sweep accumulation, wash trading patterns, and mint surges, then returns source status plus coverage notes. Pass a contract address. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -152,7 +152,7 @@ export const tools = [
   // ── Aviation ──────────────────────────────────────────────────────────────
   {
     name: "squawk_alerts",
-    description: "Live global sweep of active aviation emergency squawk codes via OpenSky Network. Returns all aircraft currently squawking 7700 (general emergency), 7600 (radio failure), or 7500 (hijack) with position, altitude, and velocity. Costs $0.02 USDC on Base mainnet.",
+    description: "Best-effort live global sweep of active aviation emergency squawk codes via OpenSky Network. Returns aircraft currently squawking 7700, 7600, or 7500 with source status and coverage notes. Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {}

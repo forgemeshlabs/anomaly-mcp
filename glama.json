@@ -1,7 +1,7 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
   "name": "@forgemeshlabs/anomaly-mcp",
-  "description": "Multi-domain sequence anomaly detection — blockchain, aviation, and GitHub. NASA-derived sequence mining returns story labels via x402 micropayments on Base mainnet.",
+  "description": "Multi-domain real-time anomaly detection — blockchain, aviation, GitHub, mempool, and stablecoin depeg monitoring. NASA-derived sequence mining returns story labels via x402 micropayments on Base mainnet.",
   "maintainers": [
     "clawdbotworker"
   ],
@@ -10,6 +10,10 @@
     "blockchain",
     "aviation",
     "github",
+    "mempool",
+    "stablecoin",
+    "depeg",
+    "realtime",
     "x402",
     "usdc",
     "sequence-mining"
