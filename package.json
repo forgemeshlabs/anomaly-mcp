@@ -1,6 +1,6 @@
 {
   "name": "@forgemeshlabs/anomaly-mcp",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "mcpName": "io.github.forgemeshlabs/anomaly-mcp",
   "description": "Multi-domain real-time anomaly detection MCP server. Mempool (5s polling), stablecoin depeg (1min polling), blockchain, aviation, and GitHub anomalies via x402 micropayments.",
   "type": "module",
