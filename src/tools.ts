@@ -1,6 +1,30 @@
 declare const process: { env: Record<string, string | undefined> };
 const API_BASE = process.env.ANOMALY_API_BASE || "https://anomaly.forgemesh.io";
 
+type X402Accept = {
+  amount?: string;
+  asset?: string;
+  network?: string;
+  payTo?: string;
+  scheme?: string;
+  maxTimeoutSeconds?: number;
+  extra?: {
+    name?: string;
+    version?: string;
+  };
+};
+
+type X402Challenge = {
+  accepts?: X402Accept[];
+  error?: string;
+  resource?: {
+    description?: string;
+    mimeType?: string;
+    url?: string;
+  };
+  x402Version?: number;
+};
+
 export const tools = [
   {
     name: "health_check",
@@ -260,19 +284,57 @@ export const tools = [
   }
 ];
 
+function parsePaymentChallenge(header: string | null): X402Challenge | null {
+  if (!header) return null;
+  try {
+    return JSON.parse(atob(header)) as X402Challenge;
+  } catch {
+    return null;
+  }
+}
+
+function formatAtomicUsdc(amount: string | undefined): string | null {
+  if (!amount || !/^\d+$/.test(amount)) return null;
+  const padded = amount.padStart(7, "0");
+  const whole = padded.slice(0, -6) || "0";
+  const fraction = padded.slice(-6).replace(/0+$/, "");
+  return fraction ? `${whole}.${fraction}` : whole;
+}
+
+function paymentRequiredResponse(path: string, challenge: X402Challenge | null): Record<string, unknown> {
+  const accept = challenge?.accepts?.[0];
+  const amountUsdc = formatAtomicUsdc(accept?.amount);
+  const url = challenge?.resource?.url || `${API_BASE}${path}`;
+
+  return {
+    x402_status: 402,
+    payment_required: true,
+    message: amountUsdc
+      ? `Payment required: ${amountUsdc} USDC on Base.`
+      : "Payment required: USDC on Base.",
+    payment: {
+      amount_usdc: amountUsdc,
+      amount_atomic: accept?.amount || null,
+      asset: accept?.extra?.name || "USDC",
+      asset_address: accept?.asset || null,
+      network: accept?.network || "eip155:8453",
+      pay_to: accept?.payTo || null,
+      scheme: accept?.scheme || "exact",
+      max_timeout_seconds: accept?.maxTimeoutSeconds || null
+    },
+    resource: {
+      url,
+      description: challenge?.resource?.description || null,
+      mime_type: challenge?.resource?.mimeType || "application/json"
+    },
+    next_step: "Pay this x402 challenge with a compatible client, then retry the same tool call."
+  };
+}
+
 async function apiGet(path: string): Promise<unknown> {
   const res = await fetch(`${API_BASE}${path}`);
   if (res.status === 402) {
-    const challenge = res.headers.get("payment-required");
-    let decoded: unknown = null;
-    if (challenge) {
-      try { decoded = JSON.parse(atob(challenge)); } catch {}
-    }
-    return {
-      x402_status: 402,
-      message: "Payment required — this endpoint costs USDC on Base mainnet via x402 protocol.",
-      challenge: decoded
-    };
+    return paymentRequiredResponse(path, parsePaymentChallenge(res.headers.get("payment-required")));
   }
   return res.json();
 }
@@ -284,16 +346,7 @@ async function apiPost(path: string, body: Record<string, unknown>): Promise<unk
     body: JSON.stringify(body)
   });
   if (res.status === 402) {
-    const challenge = res.headers.get("payment-required");
-    let decoded: unknown = null;
-    if (challenge) {
-      try { decoded = JSON.parse(atob(challenge)); } catch {}
-    }
-    return {
-      x402_status: 402,
-      message: "Payment required — this endpoint costs USDC on Base mainnet via x402 protocol.",
-      challenge: decoded
-    };
+    return paymentRequiredResponse(path, parsePaymentChallenge(res.headers.get("payment-required")));
   }
   return res.json();
 }
