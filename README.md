@@ -1,5 +1,7 @@
 # Anomaly Tracker MCP
 
+[![M8ven Verified](https://m8ven.ai/badge/mcp/forgemeshlabs-anomaly-mcp-1cthpp?variant=verified)](https://m8ven.ai/mcp/forgemeshlabs-anomaly-mcp-1cthpp)
+
 [![anomaly-mcp MCP server](https://glama.ai/mcp/servers/forgemeshlabs/anomaly-mcp/badges/card.svg)](https://glama.ai/mcp/servers/forgemeshlabs/anomaly-mcp)
 
 Multi-domain sequence anomaly detection for AI agents. Detects unusual event patterns across blockchain markets, live airspace, and GitHub repositories using NASA-derived sequence mining. Returns a story label and anomaly score, not just a number.
