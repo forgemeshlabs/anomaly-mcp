@@ -6,12 +6,12 @@
     "url": "https://github.com/forgemeshlabs/anomaly-mcp",
     "source": "github"
   },
-  "version": "0.5.3",
+  "version": "0.5.6",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@forgemeshlabs/anomaly-mcp",
-      "version": "0.5.3",
+      "version": "0.5.6",
       "transport": {
         "type": "stdio"
       },
@@ -23,6 +23,15 @@
           "isSecret": false,
           "format": "string"
         }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "src": "https://forgemesh.io/favicon.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "1254x1254"
       ]
     }
   ]
