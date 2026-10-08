@@ -7,7 +7,7 @@ import { callTool, tools } from "./tools.js";
 const server = new Server(
   {
     name: "anomaly-mcp",
-    version: "0.5.6"
+    version: "0.5.7"
   },
   {
     capabilities: {
