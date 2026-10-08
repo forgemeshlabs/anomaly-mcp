@@ -1,5 +1,14 @@
-declare const process: { env: Record<string, string | undefined> };
-const API_BASE = process.env.ANOMALY_API_BASE || "https://anomaly.forgemesh.io";
+import { createRequire } from "node:module";
+
+const API_BASE = "https://anomaly.forgemesh.io";
+// Vendored bounded-fetch guard (60s timeout, 2 MB cap, no redirects, single origin). payTo: [] = this server never signs.
+const require = createRequire(import.meta.url);
+const { createGuard } = require("../x402-guard.cjs") as {
+  createGuard: (o: { baseUrl: string; payTo: string[] }) => {
+    fetchBounded: (url: string, init?: Record<string, unknown>) => Promise<{ status: number; headers: Headers; text: string }>;
+  };
+};
+const guard = createGuard({ baseUrl: API_BASE, payTo: [] });
 
 type X402Accept = {
   amount?: string;
@@ -428,15 +437,15 @@ function paymentRequiredResponse(path: string, challenge: X402Challenge | null):
 }
 
 async function apiGet(path: string): Promise<unknown> {
-  const res = await fetch(`${API_BASE}${path}`);
+  const res = await guard.fetchBounded(path);
   if (res.status === 402) {
     return paymentRequiredResponse(path, parsePaymentChallenge(res.headers.get("payment-required")));
   }
-  return res.json();
+  return JSON.parse(res.text);
 }
 
 async function apiPost(path: string, body: Record<string, unknown>): Promise<unknown> {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await guard.fetchBounded(path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
@@ -444,7 +453,7 @@ async function apiPost(path: string, body: Record<string, unknown>): Promise<unk
   if (res.status === 402) {
     return paymentRequiredResponse(path, parsePaymentChallenge(res.headers.get("payment-required")));
   }
-  return res.json();
+  return JSON.parse(res.text);
 }
 
 export async function callTool(name: string, args: Record<string, unknown>): Promise<unknown> {

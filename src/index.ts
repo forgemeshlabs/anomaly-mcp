@@ -2,12 +2,15 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { readFileSync } from "node:fs";
 import { callTool, tools } from "./tools.js";
+
+const { version } = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as { version: string };
 
 const server = new Server(
   {
     name: "anomaly-mcp",
-    version: "0.5.7"
+    version
   },
   {
     capabilities: {

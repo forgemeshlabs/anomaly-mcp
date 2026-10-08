@@ -9,6 +9,7 @@
   },
   "files": [
     "dist",
+    "x402-guard.cjs",
     "README.md",
     "LICENSE.md",
     "glama.json",
