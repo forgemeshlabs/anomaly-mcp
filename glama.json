@@ -17,5 +17,6 @@
     "x402",
     "usdc",
     "sequence-mining"
-  ]
+  ],
+  "version": "0.5.10"
 }
