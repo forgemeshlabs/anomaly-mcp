@@ -54,7 +54,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Scan a blockchain for sequence anomalies — unusual patterns of whale movements, exchange flows, bridge activity, and stablecoin mints/burns. Returns a story label, anomaly score (0-100), novelty level, and the peak anomalous symbol window. Costs $0.05 USDC on Base mainnet.",
+    description: "On-chain anomaly detection: scan a blockchain for sequence anomalies — unusual patterns of whale movements, exchange flows, bridge activity, and stablecoin mints/burns. Returns a story label, anomaly score (0-100), novelty level, and the peak anomalous symbol window. Costs $0.05 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -79,7 +79,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Best-effort anomaly scan for a single token — scores recent transfer patterns for unusual activity and returns source status plus coverage notes. Pass a contract address or well-known symbol. Costs $0.03 USDC on Base mainnet.",
+    description: "Token transfer anomaly scan (best effort) for a single token — scores recent transfer patterns for unusual activity and returns source status plus coverage notes. Pass a contract address or well-known symbol. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -109,7 +109,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Get recent whale movements, CEX inflows/outflows, bridge activity, and stablecoin mints/burns from monitored addresses (Binance, Coinbase, Kraken, OKX, Bybit, major bridges, Tether, Circle). Costs $0.02 USDC on Base mainnet.",
+    description: "Whale alerts: recent whale movements, CEX inflows/outflows, bridge activity, and stablecoin mints/burns from monitored addresses (Binance, Coinbase, Kraken, OKX, Bybit, major bridges, Tether, Circle). Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -133,7 +133,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Scan any wallet address for anomalous transaction patterns. Classifies each transaction by checking counterparties against known CEX wallets, bridges, and stablecoin issuers. Costs $0.03 USDC on Base mainnet.",
+    description: "Wallet anomaly scan: scan any wallet address for anomalous transaction patterns. Classifies each transaction by checking counterparties against known CEX wallets, bridges, and stablecoin issuers. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -163,7 +163,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Get SequenceMiner model health and training stats per chain — training sequence count and last retrain time. Costs $0.01 USDC on Base mainnet.",
+    description: "Anomaly model status: SequenceMiner model health and training stats per chain — training sequence count and last retrain time. Costs $0.01 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {}
@@ -178,7 +178,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Best-effort anomaly scan for an NFT collection — detects sweep accumulation, wash trading patterns, and mint surges, then returns source status plus coverage notes. Pass a contract address. Costs $0.03 USDC on Base mainnet.",
+    description: "NFT collection anomaly scan (best effort) — detects sweep accumulation, wash trading patterns, and mint surges, then returns source status plus coverage notes. Pass a contract address. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -208,7 +208,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Anomaly scan for a DeFi protocol — detects unusual flows through major lending and DEX contracts (Uniswap, Aave, Curve, Compound). Pass a protocol name or contract address. Returns a story label and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    description: "DeFi protocol anomaly scan — detects unusual flows through major lending and DEX contracts (Uniswap, Aave, Curve, Compound). Pass a protocol name or contract address. Returns a story label and anomaly score. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -239,7 +239,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Best-effort live global sweep of active aviation emergency squawk codes via OpenSky Network. Returns aircraft currently squawking 7700, 7600, or 7500 with source status and coverage notes. Costs $0.02 USDC on Base mainnet.",
+    description: "Aircraft emergency squawk alerts: best-effort live global sweep of active aviation emergency squawk codes via OpenSky Network. Returns aircraft currently squawking 7700, 7600, or 7500 with source status and coverage notes. Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {}
@@ -253,7 +253,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Sequence anomaly analysis for a named airspace region — detects unusual clustering of emergency squawks, rapid descents, or speed anomalies using the SequenceMiner engine. Costs $0.03 USDC on Base mainnet.",
+    description: "Airspace anomaly scan: sequence anomaly analysis for a named airspace region — detects unusual clustering of emergency squawks, rapid descents, or speed anomalies using the SequenceMiner engine. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -274,7 +274,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "GitHub repos with anomalous star velocity right now — early signals before mainstream discovery. Detects repos going viral (200+ stars/day), overnight explosions, fork surges, and issue floods. Useful for trend hunting, VC scouting, developer tool discovery. Costs $0.02 USDC on Base mainnet.",
+    description: "Trending GitHub repos: repositories with anomalous star velocity right now — early signals before mainstream discovery. Detects repos going viral (200+ stars/day), overnight explosions, fork surges, and issue floods. Useful for trend hunting, VC scouting, developer tool discovery. Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -294,7 +294,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Deep anomaly scan for a single GitHub repository — scores star velocity, fork ratio, overnight explosion signals, and issue flood patterns. Returns a story label (e.g. 'Breakout Signal', 'Viral Activity') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    description: "GitHub repo growth scan: deep anomaly scan for a single GitHub repository — scores star velocity, fork ratio, overnight explosion signals, and issue flood patterns. Returns a story label (e.g. 'Breakout Signal', 'Viral Activity') and anomaly score. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -315,7 +315,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Watch a GitHub repo's activity stream for anomalous development patterns — commit bursts, force pushes, issue floods, merge rushes, bot takeovers. Returns a story label (e.g. 'History Rewrite', 'Merge Sprint', 'Bot Takeover') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    description: "GitHub repo activity watch: watch a GitHub repo's activity stream for anomalous development patterns — commit bursts, force pushes, issue floods, merge rushes, bot takeovers. Returns a story label (e.g. 'History Rewrite', 'Merge Sprint', 'Bot Takeover') and anomaly score. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -335,7 +335,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Watch Anthropic/Claude repos for recently merged features — SDK changes, Claude Code updates, new capabilities. Scans anthropic-sdk-python, anthropic-sdk-typescript, claude-code, courses, and anthropic-cookbook. Costs $0.02 USDC on Base mainnet.",
+    description: "Claude and Anthropic release watch: watch Anthropic/Claude repos for recently merged features — SDK changes, Claude Code updates, new capabilities. Scans anthropic-sdk-python, anthropic-sdk-typescript, claude-code, courses, and anthropic-cookbook. Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -355,7 +355,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Real-time mempool anomaly score — detects gas spikes, MEV signals, pending whale swaps, contract deploy bursts, and priority fee wars. Designed for 5-second polling. Returns a story label (e.g. 'MEV Attack', 'Gas Surge', 'Priority Fee War') and anomaly score. Costs $0.01 USDC on Base mainnet.",
+    description: "Mempool anomaly monitor: real-time mempool anomaly score — detects gas spikes, MEV signals, pending whale swaps, contract deploy bursts, and priority fee wars. Designed for 5-second polling. Returns a story label (e.g. 'MEV Attack', 'Gas Surge', 'Priority Fee War') and anomaly score. Costs $0.01 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -375,7 +375,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Real-time stablecoin depeg detector — monitors USDC, USDT, DAI prices for micro-deviations from $1.00 peg, spread between stables, and volume spikes. Catches depegs before they become crises. Designed for 1-minute polling. Returns a story label (e.g. 'Single Coin Drift', 'Multi-Stablecoin Crisis', 'Depeg Event') and anomaly score. Costs $0.01 USDC on Base mainnet.",
+    description: "Stablecoin depeg monitor: real-time stablecoin depeg detector — monitors USDC, USDT, DAI prices for micro-deviations from $1.00 peg, spread between stables, and volume spikes. Catches depegs before they become crises. Designed for 1-minute polling. Returns a story label (e.g. 'Single Coin Drift', 'Multi-Stablecoin Crisis', 'Depeg Event') and anomaly score. Costs $0.01 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
