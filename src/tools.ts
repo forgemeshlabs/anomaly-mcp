@@ -54,7 +54,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "On-chain anomaly detection: scan a blockchain for sequence anomalies — unusual patterns of whale movements, exchange flows, bridge activity, and stablecoin mints/burns. Returns a story label, anomaly score (0-100), novelty level, and the peak anomalous symbol window. Costs $0.05 USDC on Base mainnet.",
+    description: "On-chain flow events with an anomaly score: the recent large exchange, bridge and stablecoin flow events on a chain (domain is fixed to financial). Window 1h, 4h, 24h or 168h; 168h is not available on base. Returns JSON with events, observed_symbols, events_collected and source_status, plus score, novelty and story only when the model has real history; otherwise score is null with reason model_not_trained_on_real_data. No events: 409, not charged. Costs $0.05 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -66,7 +66,7 @@ export const tools = [
         window: {
           type: "string",
           enum: ["1h", "4h", "24h", "168h"],
-          description: "Lookback window (default: 24h)"
+          description: "Lookback window (default: 24h); 168h is not available on base"
         }
       }
     }
@@ -79,7 +79,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Token transfer anomaly scan (best effort) for a single token — scores recent transfer patterns for unusual activity and returns source status plus coverage notes. Pass a contract address or well-known symbol. Costs $0.03 USDC on Base mainnet.",
+    description: "Token transfer scan: classified recent transfers of one token. Pass token (contract address or symbol such as usdt, usdc, weth, link, pepe), chain (ethereum only for now; base and arbitrum answer 503 without charge) and window (1h, 4h, 24h or 168h). Returns JSON with transfers, observed_symbols, events_collected and source_status; the anomaly score is null with reason model_not_trained_on_real_data until the model has real history. No transfers: 409, not charged. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -90,7 +90,7 @@ export const tools = [
         chain: {
           type: "string",
           enum: ["ethereum", "base", "arbitrum"],
-          description: "Blockchain to analyze (default: ethereum)"
+          description: "Blockchain (default: ethereum). Only ethereum is served today; base and arbitrum answer 503 without charge"
         },
         window: {
           type: "string",
@@ -109,7 +109,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Whale alerts: large exchange, bridge and stablecoin-issuer flows at monitored addresses (major exchanges, L2 bridges, Tether and Circle treasuries). Pass chain (ethereum, base or arbitrum; default ethereum) and hours (1-168, default 4). Returns JSON with chain, window_hours, alert_count and alerts, each with symbol (CEX_INFLOW, CEX_OUTFLOW, BRIDGE_IN, BRIDGE_OUT, STABLECOIN_MINT or STABLECOIN_REDEEM), source, amount_eth or amount_usd and timestamp. Costs $0.02 USDC on Base mainnet.",
+    description: "Whale alerts: large exchange, bridge and stablecoin flows at monitored addresses (major exchanges, L2 bridges, Tether and Circle treasuries). Pass chain (ethereum, base or arbitrum; default ethereum) and hours (1-168, default 4; base up to 96). Returns JSON with chain, window_hours, alert_count, alerts (symbol such as CEX_INFLOW, BRIDGE_IN or STABLECOIN_MINT, source, amount_eth or amount_usd, timestamp) and source_status naming the source and window checked. An empty window is stated explicitly. Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -120,7 +120,7 @@ export const tools = [
         },
         hours: {
           type: "integer",
-          description: "Lookback window in hours, 1-168 (default: 4)"
+          description: "Lookback window in hours, 1-168 (default: 4; base accepts up to 96)"
         }
       }
     }
@@ -133,7 +133,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Wallet anomaly scan: scan any wallet address for anomalous transaction patterns. Classifies each transaction by checking counterparties against known CEX wallets, bridges, and stablecoin issuers. Costs $0.03 USDC on Base mainnet.",
+    description: "Wallet activity scan: classified recent flows of one wallet (ETH transfers of 10 ETH or more, token transfers, flows with known exchanges and bridges). Pass address (0x...), chain (ethereum only for now; base and arbitrum answer 503 without charge) and window (1h, 4h, 24h or 168h). Returns JSON with activity, observed_symbols and source_status; the anomaly score is null with a reason until the model has real history. No classifiable activity: 409, not charged. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -144,7 +144,7 @@ export const tools = [
         chain: {
           type: "string",
           enum: ["ethereum", "base", "arbitrum"],
-          description: "Blockchain to scan (default: ethereum)"
+          description: "Blockchain (default: ethereum). Only ethereum is served today; base and arbitrum answer 503 without charge"
         },
         window: {
           type: "string",
@@ -163,7 +163,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Anomaly model status: SequenceMiner model health and training stats per chain — training sequence count and last retrain time. Costs $0.01 USDC on Base mainnet.",
+    description: "Anomaly model status: which model domains can score right now. No parameters. Returns JSON with status, chains (training_sequences, observed_sequences_7d, can_score, last_retrain) and models per domain (observed_sequences_7d, required_sequences_7d, can_score). A domain scores only with at least 10 observed sequences in the last 7 days; check it before relying on a score. Costs $0.01 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {}
@@ -178,7 +178,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "NFT collection anomaly scan (best effort) — detects sweep accumulation, wash trading patterns, and mint surges, then returns source status plus coverage notes. Pass a contract address. Costs $0.03 USDC on Base mainnet.",
+    description: "NFT collection transfer scan: classified recent transfers of one NFT contract (mints, sweeps, repeated back-and-forth trades). Pass token (NFT contract address), chain (ethereum only for now; base and arbitrum answer 503 without charge) and window (1h, 4h, 24h or 168h). Returns JSON with recent_events, observed_symbols, collection metadata and source_status; the anomaly score is null with a reason until the model has real history. No transfers: 409, not charged. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -189,7 +189,7 @@ export const tools = [
         chain: {
           type: "string",
           enum: ["ethereum", "base", "arbitrum"],
-          description: "Blockchain (default: ethereum)"
+          description: "Blockchain (default: ethereum). Only ethereum is served today; base and arbitrum answer 503 without charge"
         },
         window: {
           type: "string",
@@ -208,18 +208,18 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "DeFi protocol anomaly scan — detects unusual flows through major lending and DEX contracts (Uniswap, Aave, Curve, Compound). Pass a protocol name or contract address. Returns a story label and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    description: "DeFi protocol flow scan: classified value flows at one protocol contract (ETH transfers of 10+ ETH, token transfers, flows with known exchanges and bridges; plain contract calls are not classified). Pass protocol (uniswap_v3, aave_v3, aave_v2, curve_3pool, compound_v3 or a contract address), chain (ethereum only for now) and window. Returns JSON with activity and observed_symbols; the score is null with a reason until the model has real history. Nothing classifiable: 409, not charged. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
         protocol: {
           type: "string",
-          description: "Protocol name (uniswap_v3, uniswap_v3_r2, aave_v3, aave_v2, curve_3pool, compound_v3) or a 0x contract address"
+          description: "Protocol name (uniswap_v3, aave_v3, aave_v2, curve_3pool, compound_v3) or a 0x contract address"
         },
         chain: {
           type: "string",
           enum: ["ethereum", "base", "arbitrum"],
-          description: "Blockchain (default: ethereum)"
+          description: "Blockchain (default: ethereum). Only ethereum is served today; base and arbitrum answer 503 without charge"
         },
         window: {
           type: "string",
@@ -239,7 +239,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Aircraft emergency squawk alerts: best-effort live global sweep of active aviation emergency squawk codes via OpenSky Network. Returns aircraft currently squawking 7700, 7600, or 7500 with source status and coverage notes. Costs $0.02 USDC on Base mainnet.",
+    description: "Aircraft emergency squawk alerts: aircraft currently transmitting transponder code 7500 (hijack), 7600 (radio failure) or 7700 (general emergency), as heard by the adsb.lol volunteer receiver network (ODbL data; coverage is thin over oceans and sparse regions). No parameters. Returns JSON with as_of, emergency_count, by_type and alerts (icao24, callsign, registration, squawk, squawk_type, latitude, longitude, altitude). None active is a valid answer and says so. Source down: 503, not charged. Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {}
@@ -253,16 +253,17 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Airspace anomaly scan: sequence anomaly analysis for a named airspace region — detects unusual clustering of emergency squawks, rapid descents, or speed anomalies using the SequenceMiner engine. Costs $0.03 USDC on Base mainnet.",
+    description: "Airspace scan: classified air-traffic events in a region (emergency squawks, rapid descents, speed outliers) from adsb.lol volunteer receivers (ODbL data), sampled with 250 NM circles, not the whole region. Pass region (required). Returns JSON with as_of, total_aircraft, airborne and observed_symbols; the score is null with a reason until the model has real history. No aircraft heard: 409; source down: 503; not charged. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
         region: {
           type: "string",
-          enum: ["north_atlantic", "europe", "north_america", "asia_pacific", "middle_east", "africa", "global"],
-          description: "Airspace region to analyze (default: global)"
+          enum: ["north_atlantic", "europe", "north_america", "asia_pacific", "middle_east", "africa"],
+          description: "Airspace region to analyze (required)"
         }
-      }
+      },
+      required: ["region"]
     }
   },
   // ── Creator signals ───────────────────────────────────────────────────────
@@ -274,7 +275,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Trending GitHub repos: repositories with anomalous star velocity right now — early signals before mainstream discovery. Detects repos going viral (200+ stars/day), overnight explosions, fork surges, and issue floods. Useful for trend hunting, VC scouting, developer tool discovery. Costs $0.02 USDC on Base mainnet.",
+    description: "Trending GitHub repos: new repositories with unusually fast star growth. Pass days (3, 7, 14 or 30; default 7, echoed; any other value is a 400). Returns JSON with signals ranked by star velocity (full_name, stars, stars_per_day, fork_ratio, language), signal_count and scanned count. The overall score is null with reason model_not_trained_on_real_data until the model has real history. Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -294,7 +295,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "GitHub repo growth scan: deep anomaly scan for a single GitHub repository — scores star velocity, fork ratio, overnight explosion signals, and issue flood patterns. Returns a story label (e.g. 'Breakout Signal', 'Viral Activity') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    description: "GitHub repo growth scan: growth metrics for one repository. Pass repo (owner/repo, e.g. vercel/ai). Returns JSON with metrics (stars, stars_per_day, fork_ratio, age_days, language) and observed_symbols (velocity signals such as HOT_REPO or FORK_SURGE). The anomaly score is null with reason model_not_trained_on_real_data until the model has real history. Unknown repo: 404, not charged. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -315,7 +316,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "GitHub repo activity watch: watch a GitHub repo's activity stream for anomalous development patterns — commit bursts, force pushes, issue floods, merge rushes, bot takeovers. Returns a story label (e.g. 'History Rewrite', 'Merge Sprint', 'Bot Takeover') and anomaly score. Costs $0.03 USDC on Base mainnet.",
+    description: "GitHub repo activity watch: recent public event activity for one repository. Pass repo (owner/repo). Returns JSON with total_events, unique_actors, bot_ratio, event_breakdown (commits, PR merges, PR opens, issues), recent_events and observed_symbols (e.g. COMMIT_BURST, MERGE_RUSH). The anomaly score is null with a reason until the model has real history. No public events: 409, not charged. Costs $0.03 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -335,7 +336,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Claude and Anthropic release watch: watch Anthropic/Claude repos for recently merged features — SDK changes, Claude Code updates, new capabilities. Scans anthropic-sdk-python, anthropic-sdk-typescript, claude-code, courses, and anthropic-cookbook. Costs $0.02 USDC on Base mainnet.",
+    description: "Claude and Anthropic release watch: recently merged pull requests across Anthropic's public Claude repos. Pass days (an integer 1-30; default 7, echoed; anything else is a 400, not charged). Returns JSON with features_merged, repos_scanned, since, days, by_repo counts and features (title, repo, merged_at, author, labels). Costs $0.02 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -355,7 +356,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Mempool anomaly monitor: real-time mempool anomaly score — detects gas spikes, MEV signals, pending whale swaps, contract deploy bursts, and priority fee wars. Designed for 5-second polling. Returns a story label (e.g. 'MEV Attack', 'Gas Surge', 'Priority Fee War') and anomaly score. Costs $0.01 USDC on Base mainnet.",
+    description: "Mempool monitor: gas level and pending-transaction snapshot on Ethereum or Base. Pass chain (ethereum or base; default ethereum). Returns JSON with pending_count, gas (current_gwei, base_fee_gwei, median_20block_gwei, ratio_vs_median), pending_stats (total_value_eth, contract_deploys, big_swaps, whale_pending) and observed_symbols. The anomaly score is null with a reason until the model has real history. Built for frequent polling. Costs $0.01 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -375,7 +376,7 @@ export const tools = [
       idempotentHint: false,
       openWorldHint: true,
     },
-    description: "Stablecoin depeg monitor: real-time stablecoin depeg detector — monitors USDC, USDT, DAI prices for micro-deviations from $1.00 peg, spread between stables, and volume spikes. Catches depegs before they become crises. Designed for 1-minute polling. Returns a story label (e.g. 'Single Coin Drift', 'Multi-Stablecoin Crisis', 'Depeg Event') and anomaly score. Costs $0.01 USDC on Base mainnet.",
+    description: "Stablecoin depeg monitor: current price and deviation from the 1 USD peg for USDC, USDT and DAI (coins tracked vary by chain). Pass chain (ethereum, base or arbitrum; default ethereum). Returns JSON with overall_status (e.g. PEG_STABLE, PEG_DRIFT), max_deviation_pct, drift_count and per-coin price, deviation_pct and status. The sequence score is null with a reason until the model has real history. Costs $0.01 USDC on Base mainnet.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -510,7 +511,7 @@ export async function callTool(name: string, args: Record<string, unknown>): Pro
 
     case "flight_scan":
       return apiPost("/api/flight-scan", {
-        region: (args.region as string) || "global"
+        region: args.region as string
       });
 
     case "trending_signal": {

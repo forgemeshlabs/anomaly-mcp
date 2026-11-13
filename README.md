@@ -5,7 +5,7 @@
 [![anomaly-mcp MCP server](https://glama.ai/mcp/servers/forgemeshlabs/anomaly-mcp/badges/card.svg)](https://glama.ai/mcp/servers/forgemeshlabs/anomaly-mcp)
 [![mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/forgemeshlabs/anomaly-mcp)
 
-Multi-domain sequence anomaly detection for AI agents. Detects unusual event patterns across blockchain markets, live airspace, and GitHub repositories using NASA-derived sequence mining. Returns a story label and anomaly score, not just a number.
+Multi-domain sequence anomaly detection for AI agents. Detects unusual event patterns across blockchain markets, live airspace, and GitHub repositories using NASA-derived sequence mining. Returns classified events and, once the model has real history, an anomaly score and story label; until then the score is null with a stated reason.
 
 This MCP server gives AI agents access to the ForgeMesh Anomaly Tracker API via 16 tools spanning blockchain, aviation, GitHub, and real-time market monitoring domains.
 
@@ -49,20 +49,20 @@ npx -y @forgemeshlabs/anomaly-mcp
 | --- | --- | --- |
 | `health_check` | API health and uptime | Free |
 | `anomaly_scan` | Chain-wide sequence anomaly scan | $0.05 USDC |
-| `token_scan` | Best-effort single-token transfer anomalies with source status | $0.03 USDC |
+| `token_scan` | Classified recent transfers of one token (ethereum only) | $0.03 USDC |
 | `whale_alerts` | Whale movements, CEX flows, bridge activity | $0.02 USDC |
 | `address_scan` | Wallet transaction pattern anomalies | $0.03 USDC |
 | `model_status` | SequenceMiner model health per chain | $0.01 USDC |
-| `nft_scan` | Best-effort NFT collection anomalies with source status | $0.03 USDC |
+| `nft_scan` | Classified recent NFT collection transfers (ethereum only) | $0.03 USDC |
 | `defi_scan` | DeFi protocol flow anomalies | $0.03 USDC |
-| `squawk_alerts` | Best-effort live aviation emergency squawk codes with source status | $0.02 USDC |
+| `squawk_alerts` | Aviation emergency squawk codes from adsb.lol receivers | $0.02 USDC |
 | `flight_scan` | Airspace region anomaly analysis | $0.03 USDC |
 | `trending_signal` | GitHub repos with anomalous star velocity | $0.02 USDC |
 | `repo_scan` | Deep repo velocity/fork anomaly scan | $0.03 USDC |
 | `github_watch` | Repo activity stream anomalies | $0.03 USDC |
 | `claude_feature_watch` | Anthropic/Claude merged feature alerts | $0.02 USDC |
-| `mempool_anomaly` | Real-time mempool anomaly score for 5-second polling | $0.01 USDC |
-| `depeg_monitor` | Real-time stablecoin depeg detector for 1-minute polling | $0.01 USDC |
+| `mempool_anomaly` | Mempool gas and pending-transaction snapshot (Ethereum or Base), built for frequent polling | $0.01 USDC |
+| `depeg_monitor` | Stablecoin price and peg deviation for USDC, USDT, DAI | $0.01 USDC |
 
 ### Blockchain Tools
 
@@ -93,10 +93,10 @@ npx -y @forgemeshlabs/anomaly-mcp
 
 ### Aviation Tools
 
-**squawk_alerts** — Best-effort live global sweep of aircraft squawking 7700 (emergency), 7600 (radio failure), or 7500 (hijack). Paid output includes source status, monitored scope, and coverage notes.
+**squawk_alerts** — Aircraft currently squawking 7700 (emergency), 7600 (radio failure), or 7500 (hijack), as heard by adsb.lol volunteer receivers (thin coverage over oceans). None active is a valid answer; source down answers 503 without charge.
 
 **flight_scan** — Sequence anomaly analysis for a named airspace region.
-- **region**: `north_atlantic`, `europe`, `north_america`, `asia_pacific`, `middle_east`, `africa`, or `global`
+- **region**: `north_atlantic`, `europe`, `north_america`, `asia_pacific`, `middle_east`, or `africa` (required; sampled with 250 NM circles, not the whole region)
 
 ### GitHub Tools
 
@@ -114,10 +114,10 @@ npx -y @forgemeshlabs/anomaly-mcp
 
 ### Real-Time Tools
 
-**mempool_anomaly** — Real-time mempool anomaly score for gas spikes, MEV signals, pending whale swaps, contract deploy bursts, and priority fee wars.
+**mempool_anomaly** — Gas level and pending-transaction snapshot on Ethereum or Base: pending_count, gas ratios, big swaps, whale pending, contract deploys. The anomaly score is null until the model has real history.
 - **chain**: `ethereum` or `base` (default: ethereum)
 
-**depeg_monitor** — Real-time stablecoin depeg detector for USDC, USDT, and DAI micro-deviations, stablecoin spreads, and volume spikes.
+**depeg_monitor** — Current price and deviation from the 1 USD peg for USDC, USDT and DAI (coins vary by chain), with overall_status and max_deviation_pct.
 - **chain**: `ethereum`, `base`, or `arbitrum` (default: ethereum)
 
 ## Symbol Alphabets
